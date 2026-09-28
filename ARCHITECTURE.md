@@ -321,3 +321,5 @@ stage=upstream_cancelled    被客户端打断取消
 5. **SQLite 未开 WAL**：极高并发写入时可能偶发 `database is locked`，该轮对话报 worker_error；必要时可开启 WAL 或重试。
 6. **记忆仅覆盖闲聊**：天气/音乐应答不进记忆，"那明天呢"这类追问依赖关键词再次命中天气。
 7. **`dialogue.action` 为新协议帧**：旧固件会收到未知 type，需确认 ESP32 端对未识别帧的忽略行为。
+
+测试github同步测试
