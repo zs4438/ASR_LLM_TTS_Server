@@ -1,0 +1,43 @@
+.env
+.env.bak
+*.bak
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+.idea/
+logs/
+ota_release/artifacts/
+reply.mp3
+*.pcm
+*.wav
+
+# 日志：根目录散装文件 + 任意目录
+*.log
+*.err.log
+*.out.log
+
+# 本地数据库（含对话/语音记忆，属隐私数据）
+data/*.sqlite3
+data/*.sqlite3-journal
+data/*.sqlite3-wal
+data/*.sqlite3-shm
+data/*.db
+
+# 音乐素材（体积大，不随仓库分发）
+music/
+music_raw/
+
+# 编码调试残留
+enc2.txt
+enc_check.txt
+
+# 工作区记忆（本地开发上下文）
+.workbuddy/
+
+# git 历史备份目录（绝不能提交：内含旧提交对象与已泄露密钥）
+.git.bak/
+.git.bak.*/
+*.git.bak*

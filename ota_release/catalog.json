@@ -1,0 +1,165 @@
+{
+  "artifacts": {
+    "esp32": {
+      "1.0.12": {
+        "artifact": "esp32/1.0.12/Wifi_Test_v1.0.12.bin",
+        "filename": "Wifi_Test_v1.0.12.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T00:45:35+00:00",
+        "sha256": "29c6969dbea4d9d37b2d2e0385ccd9604b771fc422c2066ef39119e6c1fddbd0",
+        "size": 1298752,
+        "version": "1.0.12"
+      },
+      "1.0.13": {
+        "artifact": "esp32/1.0.13/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T01:12:13+00:00",
+        "sha256": "b2596ebec758da068af277afc3262033151f066e31d6668bf023a5f7f5d6b715",
+        "size": 1298768,
+        "version": "1.0.13"
+      },
+      "1.0.14": {
+        "artifact": "esp32/1.0.14/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T01:50:46+00:00",
+        "sha256": "9039d6eb95657f6a5ce106d113fd5b0cf8f611102771fcb347e07969cf6f51db",
+        "size": 1298832,
+        "version": "1.0.14"
+      },
+      "1.0.15": {
+        "artifact": "esp32/1.0.15/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T02:30:57+00:00",
+        "sha256": "3989ae0c8f012aea770c9724599af530f3098711670652659aff4c6c211d7b39",
+        "size": 1300032,
+        "version": "1.0.15"
+      },
+      "1.0.16": {
+        "artifact": "esp32/1.0.16/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T02:34:28+00:00",
+        "sha256": "9bfd4c131ca858d5ef2919b3a230fccc61d9ad05e736c9695fdbbf451e62e053",
+        "size": 1299984,
+        "version": "1.0.16"
+      },
+      "1.0.17": {
+        "artifact": "esp32/1.0.17/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T02:48:16+00:00",
+        "sha256": "8e9e88fcf969324458485395e130b8305b90691d46bd0bd1c20d0fdfdff9dcc9",
+        "size": 1300272,
+        "version": "1.0.17"
+      },
+      "1.0.18": {
+        "artifact": "esp32/1.0.18/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T02:55:57+00:00",
+        "sha256": "61b0bec821ca55d7e65a55011f5d553b514c72294628fe50c7664124fbe7a4e9",
+        "size": 1300272,
+        "version": "1.0.18"
+      },
+      "1.0.19": {
+        "artifact": "esp32/1.0.19/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T02:59:21+00:00",
+        "sha256": "acc32782132449c54c5880d2df2421a63bb757d7876b1c2d9532d6fb258c042c",
+        "size": 1300320,
+        "version": "1.0.19"
+      },
+      "1.0.20": {
+        "artifact": "esp32/1.0.20/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T03:18:41+00:00",
+        "sha256": "9012f4e99fdbd6cffb766baa8b6907de29726de926c98b755b4dc11f3dc7d58d",
+        "size": 1300784,
+        "version": "1.0.20"
+      },
+      "1.0.21": {
+        "artifact": "esp32/1.0.21/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T03:20:35+00:00",
+        "sha256": "b626db69a4bca24f40453dc557b791242a3f296d4a42d95883131c66badf3285",
+        "size": 1300784,
+        "version": "1.0.21"
+      },
+      "1.0.22": {
+        "artifact": "esp32/1.0.22/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T03:30:20+00:00",
+        "sha256": "0e2506424bb23d62e75324439bd03f84c5ce61c41ffe85631b864de292ad3de8",
+        "size": 1300784,
+        "version": "1.0.22"
+      },
+      "1.0.23": {
+        "artifact": "esp32/1.0.23/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T03:42:04+00:00",
+        "sha256": "29c1bf3c993dc9272724260837e71133ab61d9383f114b27ef3246aa33480854",
+        "size": 1300784,
+        "version": "1.0.23"
+      },
+      "1.0.24": {
+        "artifact": "esp32/1.0.24/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T03:48:00+00:00",
+        "sha256": "49741cc7833f037e6347409e98b19ef249d9037719e933e075b0eb42c7f900ca",
+        "size": 1300784,
+        "version": "1.0.24"
+      },
+      "1.0.25": {
+        "artifact": "esp32/1.0.25/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T04:02:34+00:00",
+        "sha256": "19396d553219d63686100cd351acd35762661f88fd2bc8fc196a01dbd28315fa",
+        "size": 1300784,
+        "version": "1.0.25"
+      },
+      "1.0.26": {
+        "artifact": "esp32/1.0.26/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T09:10:16+00:00",
+        "sha256": "a754cba5d08a60f6ac07f984d524dc79b36bc682dfc51c62eccc5fbff9a481f1",
+        "size": 1301072,
+        "version": "1.0.26"
+      },
+      "1.0.27": {
+        "artifact": "esp32/1.0.27/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T09:15:23+00:00",
+        "sha256": "9c1a8836a923d9611f726764e9ee4a016190ef82926580bd826ad45aa5a2f84e",
+        "size": 1301072,
+        "version": "1.0.27"
+      },
+      "1.0.28": {
+        "artifact": "esp32/1.0.28/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-24T09:36:30+00:00",
+        "sha256": "a1bc90e907fb09d4893609dedd514e703c577a94b743a0b7c97ab8ad98201963",
+        "size": 1300784,
+        "version": "1.0.28"
+      }
+    }
+  },
+  "channels": {
+    "stable": {
+      "esp32": "1.0.28"
+    }
+  },
+  "schema_version": 1
+}
