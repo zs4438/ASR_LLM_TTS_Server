@@ -323,3 +323,4 @@ stage=upstream_cancelled    被客户端打断取消
 7. **`dialogue.action` 为新协议帧**：旧固件会收到未知 type，需确认 ESP32 端对未识别帧的忽略行为。
 
 测试github同步测试
+测试github同步测试
