@@ -18,6 +18,18 @@ SCHEMA_VERSION = 1
 CHUNK_BYTES = 64 * 1024
 TARGET_PATTERN = re.compile(r"^[a-z0-9][a-z0-9_-]{0,31}$")
 VERSION_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._+-]{0,63}$")
+CI1306_PACKAGE_VERSION_OFFSET = 0x1090
+CI1306_PACKET_BYTES = 4096
+CI1306_METADATA_REQUIRED = {
+    "format",
+    "chip",
+    "flash_mb",
+    "product_id",
+    "hardware_version",
+    "base_baud",
+    "update_baud",
+    "packet_bytes",
+}
 
 
 class PublishError(ValueError):
@@ -97,6 +109,45 @@ def _copy_and_hash(source: Path, destination: Path) -> tuple[int, str]:
         raise
 
 
+def _validate_ci1306_metadata(metadata: object) -> dict[str, Any]:
+    if not isinstance(metadata, dict):
+        raise PublishError("ci1306 metadata 必须是 JSON 对象")
+    keys = set(metadata)
+    if keys != CI1306_METADATA_REQUIRED:
+        missing = sorted(CI1306_METADATA_REQUIRED - keys)
+        unexpected = sorted(keys - CI1306_METADATA_REQUIRED)
+        raise PublishError(f"ci1306 metadata 字段不匹配: missing={missing} unexpected={unexpected}")
+    if metadata["format"] != "ci13xx-ota-v4" or metadata["chip"] != "CI1306":
+        raise PublishError("ci1306 metadata format/chip 不匹配")
+    if metadata["base_baud"] != 921600 or metadata["update_baud"] != 0:
+        raise PublishError("首版 ci1306 OTA 必须使用 base_baud=921600 和 update_baud=0")
+    if metadata["packet_bytes"] != CI1306_PACKET_BYTES:
+        raise PublishError("ci1306 packet_bytes 必须为 4096")
+    if not isinstance(metadata["flash_mb"], int) or isinstance(metadata["flash_mb"], bool) or not 1 <= metadata["flash_mb"] <= 16:
+        raise PublishError("ci1306 flash_mb 必须为 1 到 16 的整数")
+    if not isinstance(metadata["product_id"], int) or isinstance(metadata["product_id"], bool) or not 0 <= metadata["product_id"] <= 0xFFFF:
+        raise PublishError("ci1306 product_id 必须为 0 到 65535 的整数")
+    hardware_version = metadata["hardware_version"]
+    if not isinstance(hardware_version, str) or not VERSION_PATTERN.fullmatch(hardware_version):
+        raise PublishError("ci1306 hardware_version 格式不合法")
+    return dict(metadata)
+
+
+def _inspect_ci1306_package(path: Path) -> dict[str, Any]:
+    size = path.stat().st_size
+    if size < CI1306_PACKAGE_VERSION_OFFSET + 4:
+        raise PublishError("ci1306 OTA 包过短，无法读取 0x1090 软件版本")
+    with path.open("rb") as handle:
+        handle.seek(CI1306_PACKAGE_VERSION_OFFSET)
+        version_bytes = handle.read(4)
+    if len(version_bytes) != 4:
+        raise PublishError("ci1306 OTA 包软件版本读取失败")
+    return {
+        "firmware_version": f"{version_bytes[2]}.{version_bytes[1]}.{version_bytes[0]}",
+        "package_count": (size + CI1306_PACKET_BYTES - 1) // CI1306_PACKET_BYTES,
+    }
+
+
 def publish_release(
     source: Path,
     target: str,
@@ -105,6 +156,7 @@ def publish_release(
     catalog_path: Path,
     artifact_root: Path,
     model: str = "",
+    metadata: object = None,
     replace: bool = False,
 ) -> dict[str, Any]:
     """复制固件、计算元数据，并原子更新发布 catalog。"""
@@ -118,6 +170,19 @@ def publish_release(
     filename = source.name
     if filename in {"", ".", ".."} or "/" in filename or "\\" in filename:
         raise PublishError("固件文件名不合法")
+
+    artifact_metadata: dict[str, Any] = {}
+    if target == "ci1306":
+        artifact_metadata = _validate_ci1306_metadata(metadata)
+        package_info = _inspect_ci1306_package(source)
+        if version != package_info["firmware_version"]:
+            raise PublishError(
+                "ci1306 --version 必须等于 OTA 包的 0x1090 软件版本: "
+                f"expected={package_info['firmware_version']} actual={version}"
+            )
+        artifact_metadata.update(package_info)
+    elif metadata not in (None, {}):
+        raise PublishError("仅 ci1306 发布支持 metadata")
 
     artifact_root = artifact_root.resolve()
     destination = artifact_root / target / version / filename
@@ -138,6 +203,8 @@ def publish_release(
         "size": size,
         "version": version,
     }
+    if artifact_metadata:
+        artifact["metadata"] = artifact_metadata
     artifacts[version] = artifact
     catalog["channels"].setdefault(channel, {})[target] = version
     _write_catalog(catalog_path, catalog)
@@ -151,11 +218,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--version", required=True, help="发布版本，例如 1.0.13")
     parser.add_argument("--channel", default="stable", help="发布通道，默认 stable")
     parser.add_argument("--model", default="", help="可选硬件型号标识")
+    parser.add_argument(
+        "--metadata-json",
+        default="{}",
+        help="ci1306 必填的严格 JSON metadata；其他 target 不接受该参数",
+    )
     parser.add_argument("--catalog", type=Path, default=Path(__file__).with_name("catalog.json"))
     parser.add_argument("--artifact-root", type=Path, default=Path(__file__).with_name("artifacts"))
     parser.add_argument("--replace", action="store_true", help="仅开发环境允许替换已发布版本")
     args = parser.parse_args(argv)
     try:
+        metadata = json.loads(args.metadata_json)
         artifact = publish_release(
             source=args.file,
             target=args.target,
@@ -164,9 +237,10 @@ def main(argv: list[str] | None = None) -> int:
             catalog_path=args.catalog,
             artifact_root=args.artifact_root,
             model=args.model,
+            metadata=metadata,
             replace=args.replace,
         )
-    except PublishError as exc:
+    except (json.JSONDecodeError, PublishError) as exc:
         parser.error(str(exc))
     print(json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True))
     return 0

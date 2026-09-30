@@ -23,6 +23,22 @@
 
 不要手动编辑 `size` 或 `sha256`。同一个 target/version 默认不可覆盖，发布修复固件应使用更高版本号。`--replace` 只用于开发环境重新做实验。
 
+## 发布 CI1306 V4 OTA 包
+
+CI OTA 使用独立的 `ci-dev` 通道。发布工具会从包内偏移 `0x1090` 读取软件版本，`--version` 必须与该值一致，并自动写入包数；不要用普通烧录镜像代替 OTA 包。
+
+```powershell
+.\.venv\Scripts\python.exe -m ota_release.publish `
+  --file ..\CI13XX_SDK_LLM_AIOT_V3.0.19\projects\offline_asr_llm_aiot_uart_sample\firmware\ota_Firmware_V2.bin `
+  --target ci1306 `
+  --version 2.0.0 `
+  --channel ci-dev `
+  --model ci1306-uart-v4 `
+  --metadata-json '{\"format\":\"ci13xx-ota-v4\",\"chip\":\"CI1306\",\"flash_mb\":4,\"product_id\":100,\"hardware_version\":\"2.0.0\",\"base_baud\":921600,\"update_baud\":0,\"packet_bytes\":4096}'
+```
+
+CI 客户端会固定 manifest SHA-256 对应的 ETag，并以单段 HTTP Range 按 CI 请求的 4 KiB 包号读取。每次发布后重启服务，让其重新加载并复核 catalog。
+
 ## 启动服务
 
 先停止旧的 `slow_ota_server.py`，否则它会占用 8000 端口。再执行：

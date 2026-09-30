@@ -1,5 +1,91 @@
 {
   "artifacts": {
+    "ci1306": {
+      "2.0.0": {
+        "artifact": "ci1306/2.0.0/ota_Firmware_V2.bin",
+        "filename": "ota_Firmware_V2.bin",
+        "metadata": {
+          "base_baud": 921600,
+          "chip": "CI1306",
+          "firmware_version": "2.0.0",
+          "flash_mb": 4,
+          "format": "ci13xx-ota-v4",
+          "hardware_version": "2.0.0",
+          "package_count": 400,
+          "packet_bytes": 4096,
+          "product_id": 100,
+          "update_baud": 0
+        },
+        "model": "ci1306-uart-v4",
+        "published_at": "2026-09-29T01:12:30+00:00",
+        "sha256": "a4928f9241fc22a8160998c5b156aefb29bbef7e41003608b659192c6c01e0e4",
+        "size": 1636825,
+        "version": "2.0.0"
+      },
+      "2.0.1": {
+        "artifact": "ci1306/2.0.1/ota_Firmware_V2.bin",
+        "filename": "ota_Firmware_V2.bin",
+        "metadata": {
+          "base_baud": 921600,
+          "chip": "CI1306",
+          "firmware_version": "2.0.1",
+          "flash_mb": 4,
+          "format": "ci13xx-ota-v4",
+          "hardware_version": "2.0.0",
+          "package_count": 400,
+          "packet_bytes": 4096,
+          "product_id": 100,
+          "update_baud": 0
+        },
+        "model": "ci1306-uart-v4",
+        "published_at": "2026-09-29T01:59:49+00:00",
+        "sha256": "74a6cdf6a45465b486c1e77d5c8e56eeeb5c1d8d8cfeff7c9ceebb32f86cd690",
+        "size": 1636825,
+        "version": "2.0.1"
+      },
+      "2.0.2": {
+        "artifact": "ci1306/2.0.2/ota_Firmware_V2.bin",
+        "filename": "ota_Firmware_V2.bin",
+        "metadata": {
+          "base_baud": 921600,
+          "chip": "CI1306",
+          "firmware_version": "2.0.2",
+          "flash_mb": 4,
+          "format": "ci13xx-ota-v4",
+          "hardware_version": "2.0.0",
+          "package_count": 400,
+          "packet_bytes": 4096,
+          "product_id": 100,
+          "update_baud": 0
+        },
+        "model": "ci1306-uart-v4",
+        "published_at": "2026-09-29T02:06:23+00:00",
+        "sha256": "93fd73044f4d7244467789244d196eb67e859254cc5590b8c2ad1ea4d26f0d02",
+        "size": 1636825,
+        "version": "2.0.2"
+      },
+      "2.0.3": {
+        "artifact": "ci1306/2.0.3/ota_Firmware_V2.bin",
+        "filename": "ota_Firmware_V2.bin",
+        "metadata": {
+          "base_baud": 921600,
+          "chip": "CI1306",
+          "firmware_version": "2.0.3",
+          "flash_mb": 4,
+          "format": "ci13xx-ota-v4",
+          "hardware_version": "2.0.0",
+          "package_count": 400,
+          "packet_bytes": 4096,
+          "product_id": 100,
+          "update_baud": 0
+        },
+        "model": "ci1306-uart-v4",
+        "published_at": "2026-09-29T03:33:57+00:00",
+        "sha256": "9bab75b5062b66852fe3ed6182a2f3636dcabfe8719e73d17f1ee9776efe0990",
+        "size": 1636825,
+        "version": "2.0.3"
+      }
+    },
     "esp32": {
       "1.0.12": {
         "artifact": "esp32/1.0.12/Wifi_Test_v1.0.12.bin",
@@ -153,12 +239,42 @@
         "sha256": "a1bc90e907fb09d4893609dedd514e703c577a94b743a0b7c97ab8ad98201963",
         "size": 1300784,
         "version": "1.0.28"
+      },
+      "1.0.29": {
+        "artifact": "esp32/1.0.29/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-28T07:05:07+00:00",
+        "sha256": "81ed16483819f26a25cc1f818ccf3ff5fdf5200bb1921c291a021092758043fa",
+        "size": 1300768,
+        "version": "1.0.29"
+      },
+      "1.0.30": {
+        "artifact": "esp32/1.0.30/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-28T07:07:53+00:00",
+        "sha256": "0aac389249a703c9b87e2ae9de0839363b42ac60ef2bfd72a3521f71baf1e986",
+        "size": 1300768,
+        "version": "1.0.30"
+      },
+      "1.0.31": {
+        "artifact": "esp32/1.0.31/Wifi_Test.bin",
+        "filename": "Wifi_Test.bin",
+        "model": "esp32-s3-master",
+        "published_at": "2026-09-28T07:17:44+00:00",
+        "sha256": "279956e0f9f17d17e12e9f73e3a43042650d3e1e5f52cdeca69bca6669d008d0",
+        "size": 1300768,
+        "version": "1.0.31"
       }
     }
   },
   "channels": {
+    "ci-dev": {
+      "ci1306": "2.0.3"
+    },
     "stable": {
-      "esp32": "1.0.28"
+      "esp32": "1.0.31"
     }
   },
   "schema_version": 1

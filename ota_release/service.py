@@ -22,6 +22,20 @@ TARGET_PATTERN = re.compile(r"^[a-z0-9][a-z0-9_-]{0,31}$")
 VERSION_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._+-]{0,63}$")
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 DEVICE_SN_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$")
+CI1306_PACKET_BYTES = 4096
+CI1306_PACKAGE_VERSION_OFFSET = 0x1090
+CI1306_METADATA_KEYS = {
+    "format",
+    "chip",
+    "flash_mb",
+    "product_id",
+    "hardware_version",
+    "base_baud",
+    "update_baud",
+    "packet_bytes",
+    "firmware_version",
+    "package_count",
+}
 
 
 class CatalogError(ValueError):
@@ -38,6 +52,7 @@ class Artifact:
     size: int
     model: str
     published_at: str
+    metadata: dict[str, object]
 
 
 class ReleaseCatalog:
@@ -95,7 +110,7 @@ class ReleaseCatalog:
         items: dict[str, object] = {}
         for target, version in target_versions.items():
             artifact = self.artifact(target, version)
-            items[target] = {
+            item = {
                 "version": artifact.version,
                 "url": f"{base_url}/v1/ota/artifacts/{artifact.target}/{artifact.version}",
                 "sha256": artifact.sha256,
@@ -103,6 +118,8 @@ class ReleaseCatalog:
                 "model": artifact.model,
                 "published_at": artifact.published_at,
             }
+            item.update(artifact.metadata)
+            items[target] = item
         items["channel"] = channel
         items["schema_version"] = SCHEMA_VERSION
         return items
@@ -136,6 +153,7 @@ class ReleaseCatalog:
         actual_sha256 = self._hash_file(path)
         if actual_size != size or not hmac.compare_digest(actual_sha256, sha256.lower()):
             raise CatalogError(f"{target} {version} 的文件与 catalog 元数据不一致")
+        metadata = self._parse_metadata(target, version, size, path, record.get("metadata"))
         return Artifact(
             target=target,
             version=version,
@@ -145,7 +163,46 @@ class ReleaseCatalog:
             size=size,
             model=str(record.get("model") or ""),
             published_at=str(record.get("published_at") or ""),
+            metadata=metadata,
         )
+
+    @staticmethod
+    def _parse_metadata(target: str, version: str, size: int, path: Path, value: object) -> dict[str, object]:
+        if target != "ci1306":
+            if value in (None, {}):
+                return {}
+            raise CatalogError(f"{target} 不支持 metadata")
+        if not isinstance(value, dict) or set(value) != CI1306_METADATA_KEYS:
+            raise CatalogError("ci1306 metadata 字段不完整或包含未知字段")
+        if value.get("format") != "ci13xx-ota-v4" or value.get("chip") != "CI1306":
+            raise CatalogError("ci1306 metadata format/chip 不匹配")
+        if value.get("base_baud") != 921600 or value.get("update_baud") != 0:
+            raise CatalogError("ci1306 metadata 波特率不受支持")
+        if value.get("packet_bytes") != CI1306_PACKET_BYTES:
+            raise CatalogError("ci1306 metadata packet_bytes 不受支持")
+        if not isinstance(value.get("flash_mb"), int) or isinstance(value.get("flash_mb"), bool) or not 1 <= value["flash_mb"] <= 16:
+            raise CatalogError("ci1306 metadata flash_mb 不合法")
+        if not isinstance(value.get("product_id"), int) or isinstance(value.get("product_id"), bool) or not 0 <= value["product_id"] <= 0xFFFF:
+            raise CatalogError("ci1306 metadata product_id 不合法")
+        if not isinstance(value.get("hardware_version"), str) or not VERSION_PATTERN.fullmatch(value["hardware_version"]):
+            raise CatalogError("ci1306 metadata hardware_version 不合法")
+        if not isinstance(value.get("firmware_version"), str) or value["firmware_version"] != version:
+            raise CatalogError("ci1306 metadata firmware_version 必须与发布版本一致")
+        if not isinstance(value.get("package_count"), int) or value["package_count"] != (size + CI1306_PACKET_BYTES - 1) // CI1306_PACKET_BYTES:
+            raise CatalogError("ci1306 metadata package_count 不匹配")
+        if size < CI1306_PACKAGE_VERSION_OFFSET + 4:
+            raise CatalogError("ci1306 OTA 包过短，无法读取 0x1090 软件版本")
+        with path.open("rb") as handle:
+            handle.seek(CI1306_PACKAGE_VERSION_OFFSET)
+            version_bytes = handle.read(4)
+        if len(version_bytes) != 4:
+            raise CatalogError("ci1306 OTA 包软件版本读取失败")
+        package_version = f"{version_bytes[2]}.{version_bytes[1]}.{version_bytes[0]}"
+        if package_version != version:
+            raise CatalogError(
+                f"ci1306 OTA 包内版本与 catalog 不一致: package={package_version} catalog={version}"
+            )
+        return dict(value)
 
     def _artifact_path(self, relative: str) -> Path:
         pure_path = PurePosixPath(relative)
